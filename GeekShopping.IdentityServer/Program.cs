@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddMvc();
 
+builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnectionString");
 
 builder.Services.AddDbContext<MySqlContext>(options =>
@@ -54,6 +56,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.MapRazorPages();
+
 app.UseIdentityServer();
 app.UseAuthorization();
 
@@ -63,6 +67,7 @@ using (var scope = scopeFactory.CreateScope())
     var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
     dbInitializer.Initialize();
 }
+
 
 app.MapControllerRoute(
     name: "default",

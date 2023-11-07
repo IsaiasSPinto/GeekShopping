@@ -23,7 +23,7 @@ public class ProductController : Controller
     }
 
 
-    public async Task<IActionResult> CreateProduct()
+    public IActionResult CreateProduct()
     {
         return View();
     }
