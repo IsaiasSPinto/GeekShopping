@@ -1,6 +1,7 @@
 ﻿using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.IServices;
 using GeekShopping.Web.Utils;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,8 @@ public class ProductController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        var products = await _productService.FindAllProducts();
+        var token = await HttpContext.GetTokenAsync("access_token");
+        var products = await _productService.FindAllProducts(token);
 
         return View(products);
     }
@@ -37,7 +39,9 @@ public class ProductController : Controller
             return View(productModel);
         }
 
-        await _productService.CreateProduct(productModel);
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        await _productService.CreateProduct(productModel, token);
 
         return RedirectToAction(nameof(Index));
     }
@@ -58,7 +62,9 @@ public class ProductController : Controller
             return View(productModel);
         }
 
-        await _productService.UpdateProduct(productModel);
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        await _productService.UpdateProduct(productModel, token);
 
         return RedirectToAction(nameof(Index));
     }
@@ -66,7 +72,9 @@ public class ProductController : Controller
     [Authorize]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var product = await _productService.FindProductById(id);
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        var product = await _productService.FindProductById(id, token);
         if (product == null)
         {
             return NotFound();
@@ -78,7 +86,9 @@ public class ProductController : Controller
     [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> DeleteProduct(ProductModel productModel)
     {
-        var response = await _productService.DeleteProduct(productModel.Id);
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        var response = await _productService.DeleteProduct(productModel.Id, token);
 
         if (!response)
         {
