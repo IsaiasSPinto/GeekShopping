@@ -48,7 +48,9 @@ public class ProductController : Controller
 
     public async Task<IActionResult> EditProduct(int id)
     {
-        var product = await _productService.FindProductById(id);
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        var product = await _productService.FindProductById(id, token);
 
         return View(product);
     }
