@@ -32,7 +32,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> CreateProduct(ProductModel productModel)
+    public async Task<IActionResult> CreateProduct(ProductViewModel productModel)
     {
         if (!ModelState.IsValid)
         {
@@ -57,7 +57,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> EditProduct(ProductModel productModel)
+    public async Task<IActionResult> EditProduct(ProductViewModel productModel)
     {
         if (!ModelState.IsValid)
         {
@@ -86,7 +86,7 @@ public class ProductController : Controller
 
     [HttpPost]
     [Authorize(Roles = Role.Admin)]
-    public async Task<IActionResult> DeleteProduct(ProductModel productModel)
+    public async Task<IActionResult> DeleteProduct(ProductViewModel productModel)
     {
         var token = await HttpContext.GetTokenAsync("access_token");
 

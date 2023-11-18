@@ -48,8 +48,6 @@ public class ProfileService : IProfileService
             }
         }
         context.IssuedClaims = claims;
-
-        throw new NotImplementedException();
     }
 
     public async Task IsActiveAsync(IsActiveContext context)

@@ -1,6 +1,6 @@
-﻿namespace GeekShopping.Web.Models;
+﻿namespace GeekShopping.CartApi.Data.Dtos;
 
-public class ProductModel
+public class ProductDto
 {
     public long Id { get; set; }
     public string Name { get; set; }

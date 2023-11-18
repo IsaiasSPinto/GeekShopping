@@ -12,6 +12,11 @@ builder.Services.AddHttpClient<IProductService, ProductService>(c =>
     c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]);
 });
 
+builder.Services.AddHttpClient<ICartService, CartService>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CartAPI"]);
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
@@ -19,7 +24,7 @@ builder.Services.AddAuthentication(options =>
 }).AddCookie("Cookies", c => c.ExpireTimeSpan = TimeSpan.FromMinutes(10))
 .AddOpenIdConnect("oidc", options =>
 {
-    options.Authority = builder.Configuration["ServiceUrls:IdentityServer"];
+    options.Authority = "https://localhost:7104/";//builder.Configuration["ServiceUrls:IdentityServer"];
     options.GetClaimsFromUserInfoEndpoint = true;
     options.ClientId = "geek_shopping";
     options.ClientSecret = "my_super_secret";
