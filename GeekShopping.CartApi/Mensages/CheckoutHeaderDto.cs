@@ -19,5 +19,5 @@ public class CheckoutHeaderDto
     public string ExpireMountYear { get; set; }
 
     public int CartTotalItens { get; set; }
-    public IEnumerable<CartDatailDto> CartDetails { get; set; }
+    public IEnumerable<CartDatailDto>? CartDetails { get; set; } = new List<CartDatailDto>();
 }

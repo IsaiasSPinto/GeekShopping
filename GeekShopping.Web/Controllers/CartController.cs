@@ -61,7 +61,11 @@ public class CartController : Controller
         var token = await HttpContext.GetTokenAsync("access_token");
         var userId = User.Claims.Where(u => u.Type == "sub").FirstOrDefault().Value;
 
-        var response = await _cartService.ApplyCupom(model, token);
+        var cart = await _cartService.FindCartByUserId(userId, token);
+
+        cart.CartHeader.CuponCode = model.CartHeader.CuponCode;
+
+        var response = await _cartService.ApplyCupom(cart, token);
 
         if (!response)
         {

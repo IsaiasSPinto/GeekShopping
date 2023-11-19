@@ -56,6 +56,10 @@ namespace GeekShopping.CartApi.Repository
             {
                 CartHeader = await _context.CartHeaders.FirstOrDefaultAsync(x => x.UserId == userId),
             };
+            if(cart.CartHeader == null)
+            {
+                return new CartDto();
+            }
 
             cart.CartDatails = await _context.CartDatails.Where(x => x.CartHeaderId == cart.CartHeader.Id).Include(x => x.Product).ToListAsync();
 
@@ -108,11 +112,13 @@ namespace GeekShopping.CartApi.Repository
         {
             var cart = _mapper.Map<Cart>(cartDto);
 
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == cart.CartDatails.FirstOrDefault().ProductId);
+            var cartDetails = cart.CartDatails.FirstOrDefault();
+
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == cartDetails.ProductId);
 
             if (product == null)
             {
-                _context.Products.Add(cart.CartDatails.FirstOrDefault().Product);
+                _context.Products.Add(cartDetails.Product);
                 await _context.SaveChangesAsync();
             }
 
@@ -122,34 +128,40 @@ namespace GeekShopping.CartApi.Repository
             {
                 _context.CartHeaders.Add(cart.CartHeader);
                 await _context.SaveChangesAsync();
-                cart.CartDatails.FirstOrDefault().CartHeaderId = cart.CartHeader.Id;
-                cart.CartDatails.FirstOrDefault().Product = null;
 
-                _context.CartDatails.Add(cart.CartDatails.FirstOrDefault());
+                cartHeader = await _context.CartHeaders.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == cart.CartHeader.UserId);
+
+                cartDetails.CartHeaderId = cartHeader.Id;
+                cartDetails.CartHeader = null;
+                cartDetails.Product = null;
+
+                _context.CartDatails.Add(cartDetails);
                 await _context.SaveChangesAsync();
             }
             else
             {
                 var cartDetail = await _context.CartDatails.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.CartHeaderId == cartHeader.Id && x.ProductId == cart.CartDatails.FirstOrDefault().ProductId);
+                    .FirstOrDefaultAsync(x => x.CartHeaderId == cartHeader.Id && x.ProductId == product.Id);
 
                 if (cartDetail == null)
                 {
-                    cart.CartDatails.FirstOrDefault().CartHeaderId = cartHeader.Id;
-                    cart.CartDatails.FirstOrDefault().Product = null;
+                    cartDetails.CartHeaderId = cartHeader.Id;
+                    cartDetails.Product = null;
 
-                    _context.CartDatails.Add(cart.CartDatails.FirstOrDefault());
+                    _context.CartDatails.Add(cartDetails);
                     await _context.SaveChangesAsync();
                 }
                 else
                 {
-                    cart.CartDatails.FirstOrDefault().Product = null;
-                    cart.CartDatails.FirstOrDefault().Count += cartDetail.Count;
-                    cart.CartDatails.FirstOrDefault().Id = cartDetail.Id;
-                    cart.CartDatails.FirstOrDefault().CartHeaderId = cartDetail.CartHeaderId;
+                    cartDetail.Product = null;
+                    cartDetail.Count += cartDetail.Count;
+                    cartDetail.Id = cartDetail.Id;
+                    cartDetail.CartHeaderId = cartDetail.CartHeaderId;
 
                     _context.CartDatails.Update(cartDetail);
                     await _context.SaveChangesAsync();
+
+                    cart.CartDatails = new List<CartDatail> { cartDetail };
                 }
             }
 

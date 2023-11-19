@@ -62,7 +62,7 @@ public class HomeController : Controller
         cartViewModel.CartDatails = cartDetailsList;
 
         await _cartService.AddItemToCart(cartViewModel, token);
-        return RedirectToAction(nameof(Details));
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Privacy()
