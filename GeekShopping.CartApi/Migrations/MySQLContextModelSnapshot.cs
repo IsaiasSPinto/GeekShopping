@@ -41,7 +41,7 @@ namespace GeekShopping.CartApi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("cart_datail");
+                    b.ToTable("cart_detail");
                 });
 
             modelBuilder.Entity("GeekShopping.CartApi.Model.CartHeader", b =>
@@ -54,7 +54,7 @@ namespace GeekShopping.CartApi.Migrations
                     b.Property<string>("CuponCode")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("cupon_code");
+                        .HasColumnName("coupon_code");
 
                     b.Property<string>("UserId")
                         .IsRequired()

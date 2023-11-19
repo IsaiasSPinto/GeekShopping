@@ -1,22 +1,20 @@
 using AutoMapper;
-using GeekShopping.CartApi.Config;
-using GeekShopping.CartApi.Model.Context;
-using GeekShopping.CartApi.Repository;
+using GeekShopping.CuponAPI.Config;
+using GeekShopping.CuponAPI.Model.Context;
+using GeekShopping.CuponAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "GeekShopping.CartAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "GeekShopping.CuponAPI", Version = "v1" });
     c.EnableAnnotations();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -59,7 +57,7 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICuponRepository, CuponRepository>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -91,7 +89,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAuthentication();
 app.UseAuthorization();

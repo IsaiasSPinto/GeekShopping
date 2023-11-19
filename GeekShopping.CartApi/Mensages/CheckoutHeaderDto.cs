@@ -1,6 +1,8 @@
-﻿namespace GeekShopping.Web.Models;
+﻿using GeekShopping.CartApi.Data.Dtos;
 
-public class CartHeaderViewModel
+namespace GeekShopping.CartApi.Mensages;
+
+public class CheckoutHeaderDto
 {
     public long Id { get; set; }
     public string UserId { get; set; }
@@ -15,4 +17,7 @@ public class CartHeaderViewModel
     public string CardNumber { get; set; }
     public string CVV { get; set; }
     public string ExpireMountYear { get; set; }
+
+    public int CartTotalItens { get; set; }
+    public IEnumerable<CartDatailDto> CartDetails { get; set; }
 }

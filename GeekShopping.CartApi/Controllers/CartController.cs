@@ -1,4 +1,5 @@
 using GeekShopping.CartApi.Data.Dtos;
+using GeekShopping.CartApi.Mensages;
 using GeekShopping.CartApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,9 @@ namespace GeekShopping.CartApi.Controllers
 
 
         [HttpGet("find-cart/{id}")]
-        public async Task<IActionResult> FindById(string userId)
+        public async Task<IActionResult> FindById(string id)
         {
-            var cart = await _cartRepository.FindCartByUserId(userId);
+            var cart = await _cartRepository.FindCartByUserId(id);
 
             if (cart is null)
             {
@@ -64,6 +65,45 @@ namespace GeekShopping.CartApi.Controllers
             }
 
             return Ok(status);
+        }
+
+        [HttpPost("apply-cupon")]
+        public async Task<IActionResult> ApplyCupon(CartDto dto)
+        {
+            var status = await _cartRepository.ApplyCupon(dto.CartHeader.UserId, dto.CartHeader.CuponCode);
+            if (!status)
+            {
+                return BadRequest();
+            }
+
+            return Ok(status);
+        }
+
+        [HttpDelete("remove-cupon/{userId}")]
+        public async Task<IActionResult> RemoveCupon(string userId)
+        {
+            var status = await _cartRepository.RemoveCupon(userId);
+            if (!status)
+            {
+                return BadRequest();
+            }
+
+            return Ok(status);
+        }
+
+        [HttpPost("checkout")]
+        public async Task<ActionResult<CheckoutHeaderDto>> Checkout(CheckoutHeaderDto dto)
+        {
+            var cart = await _cartRepository.FindCartByUserId(dto.UserId);
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            dto.CartDetails = cart.CartDatails;
+            dto.Time = DateTime.Now;
+
+            return Ok(dto);
         }
     }
 }

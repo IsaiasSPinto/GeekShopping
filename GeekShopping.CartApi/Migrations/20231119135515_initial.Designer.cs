@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeekShopping.CartApi.Migrations
 {
     [DbContext(typeof(MySQLContext))]
-    [Migration("20231118021841_initial")]
+    [Migration("20231119135515_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace GeekShopping.CartApi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("cart_datail");
+                    b.ToTable("cart_detail");
                 });
 
             modelBuilder.Entity("GeekShopping.CartApi.Model.CartHeader", b =>
@@ -57,7 +57,7 @@ namespace GeekShopping.CartApi.Migrations
                     b.Property<string>("CuponCode")
                         .IsRequired()
                         .HasColumnType("longtext")
-                        .HasColumnName("cupon_code");
+                        .HasColumnName("coupon_code");
 
                     b.Property<string>("UserId")
                         .IsRequired()

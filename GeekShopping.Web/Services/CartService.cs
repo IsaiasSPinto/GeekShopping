@@ -25,7 +25,7 @@ public class CartService : ICartService
     public async Task<CartViewModel> AddItemToCart(CartViewModel cart, string token)
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-        var response = await _client.PostAsJsonAsync($"{BasePath}/add-cart", cart);
+        var response = await _client.PostAsJson($"{BasePath}/add-cart", cart);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -61,22 +61,49 @@ public class CartService : ICartService
 
         return true;
     }
-    public async Task<CartViewModel> Checkout(CartHeaderViewModel cartHeader, string token)
+    public async Task<CartHeaderViewModel> Checkout(CartHeaderViewModel cartHeader, string token)
     {
-        throw new NotImplementedException();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        var response = await _client.PostAsJson($"{BasePath}/checkout", cartHeader);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Something went wrong when calling API");
+        }
+
+        return await response.ReadContentAs<CartHeaderViewModel>();
     }
     public async Task<bool> ClearCart(string userId, string token)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<bool> ApplyCupom(CartViewModel cart, string cuponCode, string token)
+    public async Task<bool> ApplyCupom(CartViewModel cart, string token)
     {
-        throw new NotImplementedException();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        var response = await _client.PostAsJson($"{BasePath}/apply-cupon", cart);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Something went wrong when calling API");
+        }
+
+        return true;
     }
 
     public async Task<bool> RemoveCupom(string userId, string token)
     {
-        throw new NotImplementedException();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        var response = await _client.DeleteAsync($"{BasePath}/remove-cupon/{userId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Something went wrong when calling API");
+        }
+
+        return true;
     }
 }

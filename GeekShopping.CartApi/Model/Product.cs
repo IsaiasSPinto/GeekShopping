@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GeekShopping.CartApi.Model;
 
-[Table("products")]
+[Table("product")]
 public class Product
 {
     [Key]
