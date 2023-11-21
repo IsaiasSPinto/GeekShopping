@@ -1,6 +1,7 @@
 using AutoMapper;
 using GeekShopping.CartApi.Config;
 using GeekShopping.CartApi.Model.Context;
+using GeekShopping.CartApi.RabbitMQSender;
 using GeekShopping.CartApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -60,6 +61,8 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+
+builder.Services.AddSingleton<IRabbitMQMessageSender, RabbitMQMessageSender>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
