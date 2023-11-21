@@ -13,7 +13,7 @@ public class RabbitMQMessageSender : IRabbitMQMessageSender
     {
         var factory = new ConnectionFactory
         {
-            HostName = "127.0.0.1",
+            HostName = "localhost",
             UserName = "guest",
             Password = "guest",
             Port = 15672
