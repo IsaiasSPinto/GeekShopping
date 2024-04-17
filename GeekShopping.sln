@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekShopping.CuponAPI", "Ge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{D82435E2-A4E6-47FA-B8C4-A3BDE4E965A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekShopping.MessageBus", "GeekShopping.MessageBus\GeekShopping.MessageBus.csproj", "{A39BF731-409A-4892-B854-9C74E1E9EB13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekShopping.MessageBus", "GeekShopping.MessageBus\GeekShopping.MessageBus.csproj", "{A39BF731-409A-4892-B854-9C74E1E9EB13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekShopping.OrderApi", "GeekShopping.OrderApi\GeekShopping.OrderApi.csproj", "{584BA78E-8534-47C4-BC2A-C34337B75F3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{A39BF731-409A-4892-B854-9C74E1E9EB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A39BF731-409A-4892-B854-9C74E1E9EB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A39BF731-409A-4892-B854-9C74E1E9EB13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{584BA78E-8534-47C4-BC2A-C34337B75F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{584BA78E-8534-47C4-BC2A-C34337B75F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{584BA78E-8534-47C4-BC2A-C34337B75F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{584BA78E-8534-47C4-BC2A-C34337B75F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{3B872B3D-9533-4F3F-8A13-556A43D0D524} = {73ACD1E2-ED38-45AE-8DB0-C74CD454FDDD}
 		{BF14848D-9A17-4A1D-A7C9-1B2A77D74D12} = {73ACD1E2-ED38-45AE-8DB0-C74CD454FDDD}
 		{A39BF731-409A-4892-B854-9C74E1E9EB13} = {D82435E2-A4E6-47FA-B8C4-A3BDE4E965A3}
+		{584BA78E-8534-47C4-BC2A-C34337B75F3A} = {73ACD1E2-ED38-45AE-8DB0-C74CD454FDDD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D816B52-4631-4DDA-B784-E757F054D7C0}
