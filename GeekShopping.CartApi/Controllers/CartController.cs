@@ -2,6 +2,7 @@ using GeekShopping.CartApi.Data.Dtos;
 using GeekShopping.CartApi.Mensages;
 using GeekShopping.CartApi.RabbitMQSender;
 using GeekShopping.CartApi.Repository;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeekShopping.CartApi.Controllers
@@ -11,12 +12,14 @@ namespace GeekShopping.CartApi.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartRepository _cartRepository;
+        private readonly ICuponRepository _cuponRepository;
         private readonly IRabbitMQMessageSender _rabbitMQ;
 
-        public CartController(ICartRepository cartRepository, IRabbitMQMessageSender rabbitMQ)
+        public CartController(ICartRepository cartRepository, IRabbitMQMessageSender rabbitMQ, ICuponRepository cuponRepository)
         {
             _cartRepository = cartRepository;
             _rabbitMQ = rabbitMQ;
+            _cuponRepository = cuponRepository;
         }
 
 
@@ -97,6 +100,8 @@ namespace GeekShopping.CartApi.Controllers
         [HttpPost("checkout")]
         public async Task<ActionResult<CheckoutHeaderDto>> Checkout(CheckoutHeaderDto dto)
         {
+            var token = await HttpContext.GetTokenAsync("access_token");
+
             if (dto.UserId == null) return BadRequest();
 
             var cart = await _cartRepository.FindCartByUserId(dto.UserId);
@@ -104,6 +109,16 @@ namespace GeekShopping.CartApi.Controllers
             {
                 return NotFound();
             }
+
+            if(!string.IsNullOrEmpty(dto.CuponCode))
+            {
+                var cupon = await _cuponRepository.GetCupon(dto.CuponCode, token);
+                if(cupon.DiscountAmount != cupon.DiscountAmount)
+                {
+                    return StatusCode(412, "Invalid Cupon Code");
+                }
+            }
+
 
             dto.CartDetails = cart.CartDatails;
             dto.Time = DateTime.Now;

@@ -67,6 +67,11 @@ public class CartService : ICartService
 
         var response = await _client.PostAsJson($"{BasePath}/checkout", cartHeader);
 
+        if((int)response.StatusCode == 412)
+        {
+            throw new CuponInvalidException("Coupon Price has changed, please confirm!");
+        }
+
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception("Something went wrong when calling API");

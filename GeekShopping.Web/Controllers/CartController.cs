@@ -1,5 +1,6 @@
 ﻿using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.IServices;
+using GeekShopping.Web.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,13 +39,29 @@ public class CartController : Controller
     public async Task<IActionResult> Checkout(CartViewModel model)
     {
         var token = await HttpContext.GetTokenAsync("access_token");
-        var response = await _cartService.Checkout(model.CartHeader, token);
-        if (response == null)
+
+        try
         {
-            return View(model);
+            var response = await _cartService.Checkout(model.CartHeader, token);
+            if (response == null)
+            {
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Confirmation), new { id = response.Id });
+        }
+        catch (CuponInvalidException ex)
+        {
+            TempData["Error"] = ex.Message;
+            return RedirectToAction(nameof(Checkout));
+        }
+        catch (Exception)
+        {
+
+            return View(model);            
         }
 
-        return RedirectToAction(nameof(Confirmation), new { id = response.Id });
+      
     }
 
     [HttpGet]
