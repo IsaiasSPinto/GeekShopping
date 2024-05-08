@@ -1,10 +1,8 @@
+using GeekShopping.Email.MessageConsumer;
+using GeekShopping.Email.Model.Context;
+using GeekShopping.Email.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using GeekShopping.OrderApi.Model.Context;
-using GeekShopping.OrderApi.Repository;
-using GeekShopping.OrderApi.MessageConsumer;
-using GeekShopping.OrderApi.RabbitMQSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,16 +15,14 @@ builder.Services.AddDbContext<MySQLContext>(options =>
     )
 );
 
-
 var dbBuilder = new DbContextOptionsBuilder<MySQLContext>();
 dbBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 1, 0)));
 
-builder.Services.AddSingleton(new OrderRepository(dbBuilder.Options));
+builder.Services.AddSingleton(new EmailRepository(dbBuilder.Options));
 
-builder.Services.AddHostedService<RabbitMQMessageConsumer>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+
 builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
-
-builder.Services.AddSingleton<IRabbitMQMessageSender, RabbitMQMessageSender>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -53,5 +49,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.Run();

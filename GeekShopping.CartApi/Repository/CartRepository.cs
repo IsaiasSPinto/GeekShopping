@@ -115,14 +115,16 @@ namespace GeekShopping.CartApi.Repository
             var cartDetails = cart.CartDatails.FirstOrDefault();
 
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == cartDetails.ProductId);
+            var cartHeader = await _context.CartHeaders.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == cart.CartHeader.UserId);
 
             if (product == null)
             {
+                cartDetails.CartHeader = null;
                 _context.Products.Add(cartDetails.Product);
                 await _context.SaveChangesAsync();
+                product = await _context.Products.FirstOrDefaultAsync(x => x.Id == cartDetails.ProductId);
             }
 
-            var cartHeader = await _context.CartHeaders.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == cart.CartHeader.UserId);
 
             if (cartHeader == null)
             {
@@ -147,6 +149,7 @@ namespace GeekShopping.CartApi.Repository
                 {
                     cartDetails.CartHeaderId = cartHeader.Id;
                     cartDetails.Product = null;
+                    cartDetails.CartHeader = null;
 
                     _context.CartDatails.Add(cartDetails);
                     await _context.SaveChangesAsync();

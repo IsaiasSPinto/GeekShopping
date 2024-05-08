@@ -42,6 +42,7 @@ public class CartController : Controller
 
         try
         {
+            model.CartHeader.CuponCode = model.CartHeader.CuponCode ?? "";
             var response = await _cartService.Checkout(model.CartHeader, token);
             if (response == null)
             {
@@ -57,6 +58,10 @@ public class CartController : Controller
         }
         catch (Exception)
         {
+            if (model.CartDatails == null)
+            {
+                model.CartDatails = new List<CartDatailViewModel>();
+            }
 
             return View(model);            
         }

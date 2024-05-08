@@ -6,6 +6,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
+using GeekShopping.OrderApi.RabbitMQSender;
 
 namespace GeekShopping.OrderApi.MessageConsumer;
 
@@ -14,16 +15,18 @@ public class RabbitMQMessageConsumer : BackgroundService
     private readonly OrderRepository _orderRepository;
     private IConnection _connection;
     private IModel _channel;
+    private IRabbitMQMessageSender _rabbitMQMessageSender;
 
-    public RabbitMQMessageConsumer(OrderRepository orderRepository)
+    public RabbitMQMessageConsumer(OrderRepository orderRepository, IRabbitMQMessageSender sender)
     {
         _orderRepository = orderRepository;
+        _rabbitMQMessageSender = sender;
         var factory = new ConnectionFactory
         {
-            HostName = "localhost",
+            HostName = "127.0.0.1",
             UserName = "guest",
             Password = "guest",
-            Port = 15672
+            Port = 5672
         };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
@@ -86,5 +89,26 @@ public class RabbitMQMessageConsumer : BackgroundService
         }
 
         await _orderRepository.AddOrder(orderHeader);
+
+        PaymentDto paymentDto = new()
+        {
+            Name = orderHeader.FristName + " " + orderHeader.LastName,
+            CardNumber = orderHeader.CardNumber,
+            CVV = orderHeader.CVV,
+            ExpiryMonthYear = orderHeader.ExpiryMonthYear,
+            OrderId = orderHeader.Id,
+            PurchaseAmount = orderHeader.PurchaseAmount,
+            Email = orderHeader.Email
+        };
+
+        try
+        {
+            _rabbitMQMessageSender.SendMessage(paymentDto,"orderPaymentProcessQueue");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
