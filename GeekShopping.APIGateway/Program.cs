@@ -17,6 +17,10 @@ builder.Services.AddReverseProxy()
 
 var app = builder.Build();
 
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 app.MapReverseProxy();
 
 app.Run();

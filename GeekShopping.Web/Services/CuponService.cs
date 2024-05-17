@@ -8,7 +8,7 @@ namespace GeekShopping.Web.Services;
 public class CuponService : ICuponService
 {
     private readonly HttpClient _client;
-    public const string BasePath = "api/v1/cupon";
+    public const string BasePath = "cupon";
     public CuponService(HttpClient client)
     {
         _client = client;
